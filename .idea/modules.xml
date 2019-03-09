@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/game/game.iml" filepath="$PROJECT_DIR$/game/game.iml" />
+      <module fileurl="file://$PROJECT_DIR$/game/gangster/game-gangster.iml" filepath="$PROJECT_DIR$/game/gangster/game-gangster.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mmorpg_th.iml" filepath="$PROJECT_DIR$/.idea/mmorpg_th.iml" />
+    </modules>
+  </component>
+</project>
