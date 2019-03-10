@@ -2,9 +2,7 @@ package com.kratos.engine.framework.net.socket.message;
 
 import com.kratos.engine.framework.gm.facade.GmFacade;
 import com.kratos.engine.framework.net.socket.annotation.MessageMeta;
-import com.kratos.engine.framework.net.socket.annotation.RequestMapping;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,15 +24,16 @@ public class  MessageFactory {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void registerClass(Parameter parameter, short module, short cmd) {
-		Class<?> clazz = parameter.getType();
+	public void registerClass(Class<?> clazz) {
 		if (!Message.class.isAssignableFrom(clazz)) {
 			return;
 		}
-		MessageMeta protocol = parameter.getAnnotation(MessageMeta.class);
+		MessageMeta protocol = clazz.getAnnotation(MessageMeta.class);
 		if (protocol == null) {
 			return;
 		}
+		short module = protocol.module();
+		short cmd = protocol.cmd();
 		Integer key = buildKey(module, cmd);
 		if (id2Clazz.containsKey(key)) {
 			throw new RuntimeException("message meta [" + key + "] duplicate！！");

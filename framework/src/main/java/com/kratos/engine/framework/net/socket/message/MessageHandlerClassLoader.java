@@ -1,24 +1,25 @@
-package com.kratos.engine.framework.config;
+package com.kratos.engine.framework.net.socket.message;
 
 import com.kratos.engine.framework.net.socket.task.DefaultMessageDispatcher;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
+@Log4j
 @Component
-public class MessageHandlerClassLoader
-	implements BeanPostProcessor, Ordered {
+public class MessageHandlerClassLoader implements BeanPostProcessor, Ordered {
 
 	private DefaultMessageDispatcher messageDispatcher = DefaultMessageDispatcher.getInstance();
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		//扫描所有controller的消息处理器
-
 		try {
-            messageDispatcher.registerMethodInvoke(bean);
-		}catch(Exception e) {
+			messageDispatcher.registerMethodInvoke(bean);
+		} catch (Exception e) {
+			log.error("", e);
 		}
 
 		return bean;

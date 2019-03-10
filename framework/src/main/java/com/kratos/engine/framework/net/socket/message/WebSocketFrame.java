@@ -23,10 +23,10 @@ public class WebSocketFrame {
         mapping.put(java.sql.Time.class, new SimpleDateFormatSerializer("HH:mm:ss"));
     }
 
-    public static WebSocketFrame valueOf(Message message, short module, short cmd) {
+    public static WebSocketFrame valueOf(Message message) {
         WebSocketFrame frame = new WebSocketFrame();
-        frame.module = module;
-        frame.cmd = cmd;
+        frame.module = message.getModule();
+        frame.cmd = message.getCmd();
         frame.msg = JSON.toJSONString(message, mapping, SerializerFeature.DisableCircularReferenceDetect);
         return frame;
     }

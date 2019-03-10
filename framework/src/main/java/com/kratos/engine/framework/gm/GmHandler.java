@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * gm命令处理器
  * 
- * @author kingston
+ * @author herton
  *
  */
 @Documented

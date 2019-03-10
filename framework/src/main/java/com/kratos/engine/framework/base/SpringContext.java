@@ -1,4 +1,4 @@
-package com.kratos.game.gangster.base;
+package com.kratos.engine.framework.base;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -11,9 +11,11 @@ import java.lang.annotation.*;
  * @author herton
  */
 @Documented
-@Target(ElementType.PARAMETER)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface MessageMeta {
+    short module() default 0;
 
+    short cmd() default 0;
 }
