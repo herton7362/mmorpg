@@ -45,11 +45,11 @@ public class IoSession {
      * 向客户端发送消息
      * @param packet 消息
      */
-    public void sendPacket(Message packet, short module, short cmd) {
+    public void sendPacket(Message packet) {
         if (packet == null) {
             return;
         }
-        WebSocketFrame frame = WebSocketFrame.valueOf(packet, module, cmd);
+        WebSocketFrame frame = WebSocketFrame.valueOf(packet);
         channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(frame)));
     }
 

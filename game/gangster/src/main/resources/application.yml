@@ -10,6 +10,23 @@ spring:
 ---
 spring:
   profiles: dev
+  jpa:
+    database: MYSQL
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/mmorpg?autoReconnect=true&useSSL=false
+    username: root
+    password: admin
+kratos:
+  config:
+    serverId: 10001
+    gamePort: 9999
 ---
 spring:
   profiles: prod

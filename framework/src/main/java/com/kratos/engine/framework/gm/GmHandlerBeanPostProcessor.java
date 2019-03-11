@@ -1,4 +1,4 @@
-package com.kratos.engine.framework.config;
+package com.kratos.engine.framework.gm;
 
 import com.kratos.engine.framework.gm.GmDispatcher;
 import com.kratos.engine.framework.gm.GmHandler;

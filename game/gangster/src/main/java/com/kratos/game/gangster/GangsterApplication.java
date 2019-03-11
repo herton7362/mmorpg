@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"com.kratos.engine.framework", "com.kratos.game.gangster"})
 public class GangsterApplication implements CommandLineRunner {
     private ServerNode socketServer;
+
     public static void main(String[] args) {
         SpringApplication.run(GangsterApplication.class, args);
     }
@@ -41,5 +42,6 @@ public class GangsterApplication implements CommandLineRunner {
         GangsterApplication app = new GangsterApplication();
         Runtime.getRuntime().addShutdownHook(new Thread(app::stop));
         app.start();
+
     }
 }

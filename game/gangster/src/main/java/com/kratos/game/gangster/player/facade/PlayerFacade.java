@@ -1,14 +1,15 @@
 package com.kratos.game.gangster.player.facade;
 
+import com.google.common.eventbus.Subscribe;
+import com.kratos.engine.framework.common.utils.IdGenerator;
+import com.kratos.engine.framework.event.OnFire;
 import com.kratos.engine.framework.gm.GmHandler;
 import com.kratos.engine.framework.net.socket.IoSession;
-import com.kratos.engine.framework.net.socket.ProxyClient;
 import com.kratos.engine.framework.net.socket.SessionManager;
-import com.kratos.engine.framework.net.socket.annotation.MessageMeta;
-import com.kratos.engine.framework.net.socket.annotation.RequestMapping;
+import com.kratos.engine.framework.net.socket.annotation.MessageHandler;
 import com.kratos.game.gangster.GmCommands;
-import com.kratos.game.gangster.Modules;
-import com.kratos.game.gangster.player.client.PlayerClient;
+import com.kratos.game.gangster.player.domain.Player;
+import com.kratos.game.gangster.player.event.PlayerLoginEvent;
 import com.kratos.game.gangster.player.message.ReqPlayerLogin;
 import com.kratos.game.gangster.player.message.ResPlayerLogin;
 import com.kratos.game.gangster.player.service.PlayerService;
@@ -17,19 +18,28 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PlayerFacade {
-	@Autowired
-    private PlayerClient playerClient;
+    @Autowired
+    private PlayerService playerService;
 
-	@RequestMapping(module = Modules.PLAYER, cmd = PlayerService.CMD_REQ_LOGIN)
-	public void reqPlayerLogin(IoSession session, @MessageMeta ReqPlayerLogin request) {
+	@MessageHandler
+	public void reqPlayerLogin(IoSession session, ReqPlayerLogin request) {
 		long playerId = request.getPlayerId();
 		System.out.println("角色[" + playerId + "]登录");
 		SessionManager.getInstance().registerSession(playerId, session);
-        playerClient.onPlayerLoginSuccess(new ResPlayerLogin());
+        session.sendPacket(new ResPlayerLogin());
+        OnFire.fire(new PlayerLoginEvent(new Player()));
 	}
 
 	@GmHandler(cmd = GmCommands.LEVEL)
 	public void gmSetLevel(long playerId, int level) {
 		System.err.println("[gm]修改玩家等级为" + level);
+	}
+
+	@Subscribe
+	public void onPlayerLevelUp(PlayerLoginEvent loginEvent) {
+	    Player player = new Player();
+        player.setLevel(22);
+        playerService.saveAndPersist(IdGenerator.getNextId(), player);
+		System.err.println("检测到登录事件");
 	}
 }

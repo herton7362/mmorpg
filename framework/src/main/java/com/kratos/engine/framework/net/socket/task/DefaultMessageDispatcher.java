@@ -2,15 +2,14 @@ package com.kratos.engine.framework.net.socket.task;
 
 import com.kratos.engine.framework.net.socket.IoSession;
 import com.kratos.engine.framework.net.socket.SessionManager;
-import com.kratos.engine.framework.net.socket.annotation.RequestMapping;
+import com.kratos.engine.framework.net.socket.annotation.MessageHandler;
+import com.kratos.engine.framework.net.socket.annotation.MessageMeta;
 import com.kratos.engine.framework.net.socket.message.CmdExecutor;
 import com.kratos.engine.framework.net.socket.message.Message;
-import com.kratos.engine.framework.net.socket.message.MessageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,15 +29,15 @@ public class DefaultMessageDispatcher {
 		Class<?> clz = bean.getClass();
 		Method[] methods = clz.getDeclaredMethods();
 		for (Method method:methods) {
-			RequestMapping mapperAnnotation = method.getAnnotation(RequestMapping.class);
+			MessageHandler mapperAnnotation = method.getAnnotation(MessageHandler.class);
 			if (mapperAnnotation != null) {
-				short module = mapperAnnotation.module();
-				short cmd    = mapperAnnotation.cmd();
-				if (module == 0 && cmd == 0) {
+				short[] meta = getMessageMeta(method);
+				if (meta == null) {
 					throw new RuntimeException(String.format("controller[%s] method[%s] lack of RequestMapping annotation",
 							clz.getName(), method.getName()));
 				}
-				registerMessageMeta(method, module, cmd);
+				short module = meta[0];
+				short cmd    = meta[1];
 				String key = buildKey(module, cmd);
 
 				CmdExecutor cmdExecutor = CmdExecutor.valueOf(method, method.getParameterTypes(), bean);
@@ -48,23 +47,29 @@ public class DefaultMessageDispatcher {
 		}
 	}
 
-	public void registerMethodInvoke(String key, CmdExecutor executor) {
-		if (MODULE_CMD_HANDLERS.containsKey(key)) {
-			throw new RuntimeException(String.format("module[%s] duplicated", key));
-		}
-		MODULE_CMD_HANDLERS.put(key, executor);
-	}
-
 	/**
 	 * 返回方法所带Message参数的元信息
 	 * @param method
 	 * @return
 	 */
-
-	private void registerMessageMeta(Method method, short module, short cmd) {
-		for (Parameter parameter: method.getParameters()) {
-			MessageFactory.getInstance().registerClass(parameter, module, cmd);
+	private short[] getMessageMeta(Method method) {
+		for (Class<?> paramClazz: method.getParameterTypes()) {
+			if (Message.class.isAssignableFrom(paramClazz)) {
+				MessageMeta protocol = paramClazz.getAnnotation(MessageMeta.class);
+				if (protocol != null) {
+					short[] meta = {protocol.module(), protocol.cmd()};
+					return meta;
+				}
+			}
 		}
+		return null;
+	}
+
+	public void registerMethodInvoke(String key, CmdExecutor executor) {
+		if (MODULE_CMD_HANDLERS.containsKey(key)) {
+			throw new RuntimeException(String.format("module[%s] duplicated", key));
+		}
+		MODULE_CMD_HANDLERS.put(key, executor);
 	}
 
 	/**

@@ -10,8 +10,6 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequestMapping {
-    short module() default 0;
+public @interface MessageHandler {
 
-    short cmd() default 0;
 }

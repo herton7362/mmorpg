@@ -25,27 +25,27 @@ public class SessionManager {
 	/**
 	 *  向单一在线用户发送数据包
 	 */
-	public void sendPacketTo(IoSession session, Message pact, short module, short cmd) {
+	public void sendPacketTo(IoSession session, Message pact) {
 		if(pact == null || session == null) return;
-		session.sendPacket(pact, module, cmd);
+		session.sendPacket(pact);
 	}
 
-	public void sendPacketTo(Long playerId, Message pact, short module, short cmd) {
+	public void sendPacketTo(Long playerId, Message pact) {
 		if(pact == null || playerId <= 0) return;
 
 		IoSession session = player2Sessions.get(playerId);
 		if (session != null) {
-			session.sendPacket(pact, module, cmd);
+			session.sendPacket(pact);
 		}
 	}
 
 	/**
 	 *  向所有在线用户发送数据包
 	 */
-	public void sendPacketToAllUsers(Message pact, short module, short cmd){
+	public void sendPacketToAllUsers(Message pact){
 		if(pact == null ) return;
 
-		player2Sessions.values().forEach( (session) -> session.sendPacket(pact, module, cmd));
+		player2Sessions.values().forEach( (session) -> session.sendPacket(pact));
 	}
 
 	public IoSession getSessionBy(long playerId) {
