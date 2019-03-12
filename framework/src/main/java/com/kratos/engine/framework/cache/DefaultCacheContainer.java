@@ -15,7 +15,7 @@ public class DefaultCacheContainer<K extends Serializable, V extends BaseEntity>
 
 	@Override
 	public V loadFromDb(K k) throws Exception {
-		V entity = persistable.loadFromDb(k);
+		V entity = persistable.getFromDb(k);
 		if (entity != null) {
 			entity.markPersistent();
 		}

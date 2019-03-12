@@ -17,10 +17,10 @@ public abstract class AbstractCacheContainer<K, V> {
 	private LoadingCache<K, V> cache;
 
 	public AbstractCacheContainer(CacheOptions p) {
-		cache = CacheBuilder.newBuilder().initialCapacity(p.initialCapacity).maximumSize(p.maximumSize)
+		cache = CacheBuilder.newBuilder().initialCapacity(p.getInitialCapacity()).maximumSize(p.getMaximumSize())
 				// 超时自动删除
-				.expireAfterAccess(p.expireAfterAccessSeconds, TimeUnit.SECONDS)
-				.expireAfterWrite(p.expireAfterWriteSeconds, TimeUnit.SECONDS).removalListener(new MyRemovalListener())
+				.expireAfterAccess(p.getExpireAfterAccessSeconds(), TimeUnit.SECONDS)
+				.expireAfterWrite(p.getExpireAfterAccessSeconds(), TimeUnit.SECONDS).removalListener(new MyRemovalListener())
 				.build(new DataLoader());
 	}
 

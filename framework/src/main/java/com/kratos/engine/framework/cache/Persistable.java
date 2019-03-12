@@ -12,7 +12,7 @@ public interface Persistable<K, V> {
 	 * @return  持久化对象
 	 * @throws Exception
 	 */
-    V loadFromDb(K k) throws Exception;
+    V getFromDb(K k) throws Exception;
 
 	/**
 	 * 手动加入缓存并存入数据库
@@ -20,6 +20,11 @@ public interface Persistable<K, V> {
 	 * @param key
 	 * @return
 	 */
-	void saveAndPersist(K key, V v);
-    
+	void cacheAndPersist(K key, V v);
+
+	/**
+	 * 数据删除
+	 * @param key 主键
+	 */
+	void remove(K key);
 }

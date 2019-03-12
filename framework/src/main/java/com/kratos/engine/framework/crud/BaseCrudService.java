@@ -32,7 +32,7 @@ public abstract class BaseCrudService<K extends Serializable, V extends BaseEnti
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void init() {
-        container = new DefaultCacheContainer<>(this, CacheOptions.defaultCacheOptions());
+        container = new DefaultCacheContainer<>(this, CacheOptions.builder().build());
         entityClass = (Class <V>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseCrudService<K extends Serializable, V extends BaseEnti
 	 * @param key
 	 * @return
 	 */
-	public void remove(K key) {
+	public void removeCache(K key) {
 		container.remove(key);
 	}
 
@@ -66,20 +66,34 @@ public abstract class BaseCrudService<K extends Serializable, V extends BaseEnti
 	 * @param key
 	 * @return
 	 */
-	public void put(K key, V v) {
+	public void cache(K key, V v) {
         v.setId((Long) key);
 		this.container.put(key, v);
 	}
 
     @Override
     @Transactional(readOnly = true)
-    public V loadFromDb(K k) {
+    public V getFromDb(K k) {
         return em.find(entityClass, k);
     }
 
     @Override
-    public void saveAndPersist(K key, V v) {
-        put(key, v);
+    public void cacheAndPersist(K key, V v) {
+		cache(key, v);
+		v.setUpdate();
         dbService.add2Queue(v);
     }
+
+	/**
+	 * 删除
+	 *
+	 * @param key 主键
+	 * @return
+	 */
+	public void remove(K key) {
+        BaseEntity baseEntity = get(key);
+        baseEntity.setDelete();
+        dbService.add2Queue(baseEntity);
+		container.remove(key);
+	}
 }

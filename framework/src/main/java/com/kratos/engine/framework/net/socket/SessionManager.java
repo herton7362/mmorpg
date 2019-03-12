@@ -71,13 +71,15 @@ public class SessionManager {
 			return;
 		}
 		IoSession session = ChannelUtils.getSessionBy(context);
-		Long playerId = session2Players.remove(session);
-		if (playerId != null) {
-			player2Sessions.remove(playerId);
-		}
+        session2Players.remove(session);
 		if (session != null) {
+            long playerId = session.getPlayerId();
+            player2Sessions.remove(playerId);
 			session.close(SessionCloseReason.OVER_TIME);
 		}
 	}
 
+	public Integer getOnlinePlayerCount() {
+		return player2Sessions.size();
+	}
 }

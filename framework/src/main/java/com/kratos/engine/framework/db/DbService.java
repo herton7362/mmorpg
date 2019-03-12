@@ -64,7 +64,11 @@ public class DbService {
         try {
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
-            em.persist(entity);
+            if(entity.isInsert() || entity.isUpdate()) {
+				em.persist(entity);
+			} else if(entity.isDelete()) {
+            	em.remove(entity);
+			}
             transaction.commit();
             entity.resetDbStatus();
         } catch (Exception e) {

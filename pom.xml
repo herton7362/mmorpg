@@ -48,6 +48,7 @@
         <hibernate.core.version>5.0.12.Final</hibernate.core.version>
 	    <netty.version>4.1.11.Final</netty.version>
         <guava.version>19.0</guava.version>
+        <freemarker.version>2.3.19</freemarker.version>
     </properties>
 
     <modules>
@@ -146,6 +147,12 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

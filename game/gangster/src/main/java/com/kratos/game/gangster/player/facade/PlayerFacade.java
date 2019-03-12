@@ -26,6 +26,9 @@ public class PlayerFacade {
 		long playerId = request.getPlayerId();
 		System.out.println("角色[" + playerId + "]登录");
 		SessionManager.getInstance().registerSession(playerId, session);
+        Player player = new Player();
+        player.setLevel(22);
+        playerService.cacheAndPersist(IdGenerator.getNextId(), player);
         session.sendPacket(new ResPlayerLogin());
         OnFire.fire(new PlayerLoginEvent(new Player()));
 	}
@@ -35,11 +38,13 @@ public class PlayerFacade {
 		System.err.println("[gm]修改玩家等级为" + level);
 	}
 
+	@GmHandler(cmd = GmCommands.CONFIG)
+	public void gmSetConfig(long playerId, String cmd, String file) {
+	}
+
 	@Subscribe
 	public void onPlayerLevelUp(PlayerLoginEvent loginEvent) {
-	    Player player = new Player();
-        player.setLevel(22);
-        playerService.saveAndPersist(IdGenerator.getNextId(), player);
+
 		System.err.println("检测到登录事件");
 	}
 }

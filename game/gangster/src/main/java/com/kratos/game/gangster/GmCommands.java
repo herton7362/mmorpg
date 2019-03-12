@@ -16,6 +16,10 @@ public interface GmCommands {
 	 * 设置玩家等级 [level]
 	 */
 	String LEVEL = "level";
-	
 
+
+	/**
+	 * 设置配置 [config]
+	 */
+	String CONFIG = "config";
 }
