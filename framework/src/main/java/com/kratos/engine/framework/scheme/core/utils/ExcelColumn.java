@@ -35,6 +35,8 @@ public class ExcelColumn {
     private Class<?> setterParamType; //setter的参数类型
     private Class<?> setterElementType; //当setter的参数类型有泛型时，如List<T>,setterElementName指出泛型参数的类型
     private String javaType;
+    private boolean nullable; //是否可以为空
+    private String defaultValue; //默认值
 
     //从HSSFRow构造ExcelColumn
     public ExcelColumn(HSSFRow row) {
@@ -42,7 +44,17 @@ public class ExcelColumn {
         short cellIndex = 0;
         this.columnName = getCellString(row, cellIndex++);
         this.fieldName = getCellString(row, cellIndex++);
-        this.setType(getCellString(row, cellIndex));
+        this.setType(getCellString(row, cellIndex++));
+        this.nullable = "yes".equals(getCellString(row, cellIndex++));
+        this.defaultValue = getCellString(row, cellIndex);
+    }
+
+    public ExcelColumn(String columnName, String fieldName, String type, String value) {
+        this.columnName = columnName;
+        this.fieldName = fieldName;
+        this.setType(type);
+        this.defaultValue = value;
+        this.nullable = false;
     }
 
     private void setType(String cellStr) {

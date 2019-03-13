@@ -1,0 +1,8 @@
+[
+	{
+		"max_reduce_defense":0.5555,
+		"per_defense":90,
+		"max_defense_difference":500,
+		"reduce_defense":0.1
+	}
+]

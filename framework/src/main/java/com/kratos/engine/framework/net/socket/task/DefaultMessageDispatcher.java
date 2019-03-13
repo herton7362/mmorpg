@@ -90,9 +90,8 @@ public class DefaultMessageDispatcher {
 		Object[] params = convertToMethodParams(session, cmdExecutor.getParams(), message);
 		Object controller = cmdExecutor.getHandler();
 
-		IDispatch dipatcher = session.getDispatcher();
 		GameExector.getInstance().acceptTask(
-				CmdTask.valueOf(dipatcher.dispatchMap(),
+				CmdTask.valueOf((int) session.getPlayerId(),
 						controller, cmdExecutor.getMethod(), params, session, module, cmd));
 	}
 

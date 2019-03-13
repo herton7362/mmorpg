@@ -1,9 +1,7 @@
 package com.kratos.engine.framework.scheme.tools.excel2code;
 
 import com.kratos.engine.framework.common.utils.StringHelper;
-import com.kratos.engine.framework.scheme.core.utils.ExcelData;
-import com.kratos.engine.framework.scheme.core.utils.Template;
-import com.kratos.engine.framework.scheme.core.utils.TemplateFactory;
+import com.kratos.engine.framework.scheme.core.utils.*;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
 
@@ -36,19 +34,25 @@ public abstract class BaseExcel2code {
             if (!isExcel(file)) {
                 continue;
             }
+
+            if (file.getName().equalsIgnoreCase("GameParams.xls")) {
+                excelData= GameParamExcelData.readExcel(file);
+            } else {
+                excelData = SimpleExcelData.readExcel(file);
+            }
             log.info("读取文件---------->" + file.getPath());
-            excelData = ExcelData.readExcel(file);
             String jsonCode = excelData.getJsonCode();
             jsJsonData.append(STORAGE_NAME + ".").append(excelData.getFileName()).append(" = ").append(jsonCode)
                     .append(";").append("\n");
-            createClientJsFile(excelData);
+            createServerJavaFile(excelData);
+            // 服务器文件
             FileUtils.writeStringToFile(new File(getServerJsonPath(excelData.getFileName())), jsonCode, ENCODING);
-            // 客户端文件
         }
+        // 客户端文件
         FileUtils.writeStringToFile(new File(getClientJsPath()), jsJsonData.toString(), ENCODING);
     }
 
-    private void createClientJsFile(ExcelData excelData) {
+    private void createServerJavaFile(ExcelData excelData) {
         String javaFileName = excelData.getFileName() + "Config";
         TemplateFactory
                 .builder()

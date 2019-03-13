@@ -17,9 +17,4 @@ public interface GmCommands {
 	 */
 	String LEVEL = "level";
 
-
-	/**
-	 * 设置配置 [config]
-	 */
-	String CONFIG = "config";
 }

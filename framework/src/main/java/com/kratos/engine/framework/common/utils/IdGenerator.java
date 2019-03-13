@@ -28,4 +28,11 @@ public class IdGenerator {
 			  | (generator.getAndIncrement() & 0xFFFF);
 	}
 
+	/**
+	 * 生成临时id
+	 */
+	public static long getNextTempId() {
+		return  (((System.currentTimeMillis() / 1000)) << 16)
+				| (generator.getAndIncrement() & 0xFFFF);
+	}
 }

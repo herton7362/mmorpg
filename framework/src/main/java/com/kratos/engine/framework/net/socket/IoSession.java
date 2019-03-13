@@ -3,7 +3,6 @@ package com.kratos.engine.framework.net.socket;
 import com.alibaba.fastjson.JSON;
 import com.kratos.engine.framework.net.socket.message.Message;
 import com.kratos.engine.framework.net.socket.message.WebSocketFrame;
-import com.kratos.engine.framework.net.socket.task.IDispatch;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.Data;
@@ -31,14 +30,11 @@ public class IoSession {
 
 	private long playerId;
 
-	private IDispatch dispatcher;
-
 	private Map<String, Object> attributes;
 
     public IoSession(Channel channel) {
         this.channel = channel;
         this.ipAddr = ChannelUtils.getIp(channel);
-        this.dispatcher = anonymousDispatcher;
     }
 
     /**
@@ -71,9 +67,4 @@ public class IoSession {
         }catch(Exception e){
         }
     }
-
-    /**
-     * 匿名分发器，用于角色未登录
-     */
-    static IDispatch anonymousDispatcher = () -> 0;
 }

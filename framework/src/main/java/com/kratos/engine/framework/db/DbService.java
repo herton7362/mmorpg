@@ -64,8 +64,10 @@ public class DbService {
         try {
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
-            if(entity.isInsert() || entity.isUpdate()) {
+            if(entity.isInsert()) {
 				em.persist(entity);
+			} else if(entity.isUpdate()) {
+				em.merge(entity);
 			} else if(entity.isDelete()) {
             	em.remove(entity);
 			}

@@ -1,5 +1,7 @@
 package com.kratos.engine.framework.cache;
 
+import java.util.List;
+
 /**
  * 可持久化的
  * @author herton
@@ -27,4 +29,6 @@ public interface Persistable<K, V> {
 	 * @param key 主键
 	 */
 	void remove(K key);
+
+	List<V> findAll();
 }

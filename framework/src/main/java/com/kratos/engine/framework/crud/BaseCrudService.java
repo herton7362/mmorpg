@@ -11,19 +11,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * 抽象缓存服务
- * 
+ *
  * @author herton
  */
-public abstract class BaseCrudService<K extends Serializable, V extends BaseEntity> implements Persistable<K, V> {
+public abstract class BaseCrudService<K extends Serializable, V extends BaseEntity> implements Persistable<K, V>, ICrudService<K, V> {
 
-	private AbstractCacheContainer<K, V> container;
-    private Class <V> entityClass;
+    private AbstractCacheContainer<K, V> container;
+    private Class<V> entityClass;
     @Autowired
     private EntityManager em;
     @Autowired
@@ -33,43 +38,43 @@ public abstract class BaseCrudService<K extends Serializable, V extends BaseEnti
     @SuppressWarnings("unchecked")
     public void init() {
         container = new DefaultCacheContainer<>(this, CacheOptions.builder().build());
-        entityClass = (Class <V>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        entityClass = (Class<V>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
-	/**
-	 * 通过key获取对象
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public V get(K key) {
-		return container.get(key);
-	}
+    /**
+     * 通过key获取对象
+     *
+     * @param key
+     * @return
+     */
+    public V get(K key) {
+        return container.get(key);
+    }
 
-	public final V getOrCreate(K k, Callable<V> callable) {
-		return container.getOrCreate(k, callable);
-	}
+    public final V getOrCreate(K k, Callable<V> callable) {
+        return container.getOrCreate(k, callable);
+    }
 
-	/**
-	 * 手动移除缓存
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public void removeCache(K key) {
-		container.remove(key);
-	}
+    /**
+     * 手动移除缓存
+     *
+     * @param key
+     * @return
+     */
+    public void removeCache(K key) {
+        container.remove(key);
+    }
 
-	/**
-	 * 手动加入缓存
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public void cache(K key, V v) {
-        v.setId((Long) key);
-		this.container.put(key, v);
-	}
+    /**
+     * 手动加入缓存
+     *
+     * @param key
+     * @return
+     */
+    public void cache(K key, V v) {
+        v.setId(key);
+        this.container.put(key, v);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -79,21 +84,31 @@ public abstract class BaseCrudService<K extends Serializable, V extends BaseEnti
 
     @Override
     public void cacheAndPersist(K key, V v) {
-		cache(key, v);
-		v.setUpdate();
+        cache(key, v);
         dbService.add2Queue(v);
     }
 
-	/**
-	 * 删除
-	 *
-	 * @param key 主键
-	 * @return
-	 */
-	public void remove(K key) {
+    /**
+     * 删除
+     *
+     * @param key 主键
+     * @return
+     */
+    public void remove(K key) {
         BaseEntity baseEntity = get(key);
         baseEntity.setDelete();
         dbService.add2Queue(baseEntity);
-		container.remove(key);
-	}
+        container.remove(key);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<V> findAll() {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<V> criteriaQuery = criteriaBuilder.createQuery(entityClass);
+        Root<V> root = criteriaQuery.from(entityClass);
+        criteriaQuery.select(root);
+        TypedQuery<V> query = em.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
 }

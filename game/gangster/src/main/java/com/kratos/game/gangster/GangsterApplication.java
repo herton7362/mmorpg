@@ -6,7 +6,9 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Config Server 配置中心
@@ -14,7 +16,9 @@ import org.springframework.context.annotation.ComponentScan;
  * @author herton
  */
 @Log4j
+@EnableScheduling
 @SpringBootApplication
+@EntityScan(basePackages = {"com.kratos.engine.framework", "com.kratos.game.gangster"})
 @ComponentScan(basePackages = {"com.kratos.engine.framework", "com.kratos.game.gangster"})
 public class GangsterApplication implements CommandLineRunner {
     private ServerNode socketServer;

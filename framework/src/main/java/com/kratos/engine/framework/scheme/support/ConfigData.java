@@ -13,12 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-@Data(staticConstructor = "of")
+@Data
 public class ConfigData<E> {
     private List<E> list;
     private Map<Integer, E> map;
     private final Class<E> entityClass;
     private final String jsonName;
+    protected boolean isObject;
+
+    public ConfigData(Class<E> entityClass, String jsonName) {
+        this.entityClass = entityClass;
+        this.jsonName = jsonName;
+        this.isObject = false;
+    }
 
     public Class<E> getEntityClass() {
         return entityClass;
@@ -38,7 +45,7 @@ public class ConfigData<E> {
                 log.error("", e);
             }
         }
-        if(sourceFile == null) {
+        if (sourceFile == null) {
             throw new RuntimeException(String.format("config file [%s] not found", jsonName));
         }
         List list = JsonUtil.parseJsonArray(sourceFile, entityClass);
@@ -53,6 +60,9 @@ public class ConfigData<E> {
         Map<Integer, E> dataMap = new HashMap<>();
         for (E obj : datas) {
             try {
+                if (isObject) {
+                    continue;
+                }
                 int id = (Integer) obj.getClass().getMethod("getId").invoke(obj);
                 dataMap.put(id, obj);
             } catch (Exception e) {

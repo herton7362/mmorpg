@@ -20,9 +20,26 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://localhost:3306/mmorpg?autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/mmorpg?autoReconnect=true&useSSL=false&characterEncoding=UTF-8
     username: root
     password: root
+    tomcat:
+      default-auto-commit: true
+      initial-size: 2
+      max-active: 4
+      max-wait: 60000
+      min-idle: 2
+      test-on-borrow: true
+      test-on-return: true
+      test-while-idle: true
+      validation-query: SELECT 1
+      validation-query-timeout: 3
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      remove-abandoned: true
+      remove-abandoned-timeout: 180
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
 kratos:
   config:
     serverId: 10001

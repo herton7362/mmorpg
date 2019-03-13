@@ -11,8 +11,7 @@ import java.net.InetSocketAddress;
  * @author herton
  */
 public final class ChannelUtils {
-	
-	public static AttributeKey<IoSession> SESSION_KEY = AttributeKey.valueOf("session");
+	private static AttributeKey<IoSession> SESSION_KEY = AttributeKey.valueOf("session");
 	
 	/**
 	 * 添加新的会话
@@ -33,5 +32,4 @@ public final class ChannelUtils {
 	public static String getIp(Channel channel) {
 		return ((InetSocketAddress)channel.remoteAddress()).getAddress().toString().substring(1);
 	}
-
 }

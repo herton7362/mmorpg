@@ -20,7 +20,6 @@ public class  MessageFactory {
 	}
 
 	public void init() {
-        GmFacade.registerGMHandler();
 	}
 
 	@SuppressWarnings("unchecked")

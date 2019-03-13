@@ -17,10 +17,10 @@ import java.io.Serializable;
 @Getter
 @MappedSuperclass
 @SuppressWarnings("serial")
-public abstract class BaseEntity extends AbstractCacheable implements Serializable {
+public abstract class BaseEntity<K> extends AbstractCacheable implements Serializable {
     @Id
     @Column(length = 36)
-    private long id;
+    private K id;
 
     /**
      * init hook
@@ -36,10 +36,14 @@ public abstract class BaseEntity extends AbstractCacheable implements Serializab
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Long.valueOf(getId()).hashCode();
-        return result;
+        try {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Long.valueOf((String) getId()).hashCode();
+            return result;
+        } catch (Exception ignore) {
+            return super.hashCode();
+        }
     }
 
     @Override
@@ -54,10 +58,7 @@ public abstract class BaseEntity extends AbstractCacheable implements Serializab
             return false;
         }
         BaseEntity other = (BaseEntity) obj;
-        if (getId() != other.getId()) {
-            return false;
-        }
-        return true;
+        return getId() == other.getId();
     }
 
 }
