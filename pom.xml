@@ -49,6 +49,7 @@
 	    <netty.version>4.1.11.Final</netty.version>
         <guava.version>19.0</guava.version>
         <freemarker.version>2.3.19</freemarker.version>
+        <http-request.version>6.0</http-request.version>
     </properties>
 
     <modules>
@@ -153,6 +154,12 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>${freemarker.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.kevinsawicki</groupId>
+                <artifactId>http-request</artifactId>
+                <version>${http-request.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

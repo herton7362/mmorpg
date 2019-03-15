@@ -10,8 +10,7 @@ import java.util.Date;
 
 @Data
 public class WebSocketFrame {
-	private short module;
-	private short cmd;
+	private String id;
 	private String msg;
 
     private static SerializeConfig mapping = new SerializeConfig();
@@ -25,9 +24,16 @@ public class WebSocketFrame {
 
     public static WebSocketFrame valueOf(Message message) {
         WebSocketFrame frame = new WebSocketFrame();
-        frame.module = message.getModule();
-        frame.cmd = message.getCmd();
+        frame.id = String.format("%s_%s", message.getModule(), message.getCmd());
         frame.msg = JSON.toJSONString(message, mapping, SerializerFeature.DisableCircularReferenceDetect);
         return frame;
+    }
+
+    public short getModule() {
+        return Short.parseShort(id.split("_")[0]);
+    }
+
+    public short getCmd() {
+        return Short.parseShort(id.split("_")[1]);
     }
 }

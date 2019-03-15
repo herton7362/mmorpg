@@ -1,5 +1,9 @@
 server:
-  port: 9100
+  port: 9998
+
+kratos:
+  heartbeatTick: 600
+  gamePort: 9999
 
 spring:
   application:

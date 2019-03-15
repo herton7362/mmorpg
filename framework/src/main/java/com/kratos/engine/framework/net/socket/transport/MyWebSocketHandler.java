@@ -25,9 +25,21 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 	protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
 		Channel channel = ctx.channel();
 		WebSocketFrame frame = JSON.parseObject(msg.text(), WebSocketFrame.class);
-		
+		if(frame.getId().equals("0")) {
+			ctx.channel().writeAndFlush(msg.retain());
+			return;
+		}
 		Class<?> clazz = MessageFactory.getInstance().getMessageMeta(frame.getModule(), frame.getCmd());
-		Message message = (Message) JSON.parseObject(frame.getMsg(), clazz);
+        Message message = null;
+		if(frame.getMsg() == null) {
+            try {
+                message = (Message) clazz.newInstance();
+            } catch (Exception e) {
+                logger.error("", e);
+            }
+        } else {
+            message = (Message) JSON.parseObject(frame.getMsg(), clazz);
+        }
 		IoSession session = ChannelUtils.getSessionBy(channel);
 		
 		DefaultMessageDispatcher.getInstance().dispatch(session, message, frame.getModule(), frame.getCmd());

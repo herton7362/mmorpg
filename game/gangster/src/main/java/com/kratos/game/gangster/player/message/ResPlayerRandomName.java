@@ -9,8 +9,13 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-@MessageMeta(module = Modules.PLAYER, cmd = PlayerServiceImpl.CMD_REQ_WECHAT_OPENID_LOGIN)
-public class ReqPlayerWechatOpenIdLogin extends Message {
-	private String openid;
-	private String token;
+@MessageMeta(module = Modules.PLAYER, cmd = PlayerServiceImpl.CMD_RES_RANDOM_NAME)
+public class ResPlayerRandomName extends Message {
+    private String name;
+
+    public ResPlayerRandomName() {}
+
+    public ResPlayerRandomName(String name) {
+        this.name = name;
+    }
 }

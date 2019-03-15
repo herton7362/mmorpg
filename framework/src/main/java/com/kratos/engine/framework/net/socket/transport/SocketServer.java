@@ -16,11 +16,14 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 @Log4j
+@Component
 public class SocketServer implements ServerNode {
 
     // 避免使用默认线程数参数
@@ -28,10 +31,12 @@ public class SocketServer implements ServerNode {
     private EventLoopGroup workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
 
     private int port;
+    private int heartbeatTick;
 
     @Override
-    public void init(int port) {
+    public void init(int port, int heartbeatTick) {
         this.port = port;
+        this.heartbeatTick = heartbeatTick;
 
         // 初始化协议表
         MessageFactory.getInstance().init();
@@ -78,7 +83,7 @@ public class SocketServer implements ServerNode {
 
             // 用于处理websocket, /ws为访问websocket时的uri
             pipeline.addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("/ws"));
-            pipeline.addLast("idleStateHandler", new IdleStateHandler(15, 0, 0, TimeUnit.SECONDS));
+            pipeline.addLast("idleStateHandler", new IdleStateHandler(heartbeatTick, 0, 0, TimeUnit.SECONDS));
             pipeline.addLast("myWebSocketHandler", new MyWebSocketHandler());
         }
     }

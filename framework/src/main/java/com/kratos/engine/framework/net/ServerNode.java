@@ -11,8 +11,9 @@ public interface ServerNode {
 	/**
 	 * 服务初始化
 	 * @param port 端口
+	 * @param heartbeatTick 心跳频率，秒
 	 */
-	void init(int port);
+	void init(int port, int heartbeatTick);
 	
 	/**
 	 *  服务启动

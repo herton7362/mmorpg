@@ -6,10 +6,9 @@ import com.kratos.engine.framework.net.socket.IoSession;
 import com.kratos.engine.framework.net.socket.annotation.MessageHandler;
 import com.kratos.game.gangster.GmCommands;
 import com.kratos.game.gangster.player.event.PlayerLoginEvent;
-import com.kratos.game.gangster.player.message.ReqPlayerEditName;
-import com.kratos.game.gangster.player.message.ReqPlayerWechatCodeLogin;
-import com.kratos.game.gangster.player.message.ReqPlayerWechatOpenIdLogin;
+import com.kratos.game.gangster.player.message.ReqPlayerLogin;
 import com.kratos.game.gangster.player.service.PlayerService;
+import com.kratos.game.gangster.player.service.RoleNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,21 +16,13 @@ import org.springframework.stereotype.Component;
 public class PlayerFacade {
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private RoleNameService roleNameService;
 
 	@MessageHandler
-	public void wechatOpenidLogin(IoSession session, ReqPlayerWechatOpenIdLogin request) {
-		playerService.logon(session, request.getOpenid(), request.getToken());
+	public void wechatOpenidLogin(IoSession session, ReqPlayerLogin request) {
+		playerService.logonWebSocket(session, request.getToken());
 	}
-
-    @MessageHandler
-    public void wechatCodeLogin(IoSession session, ReqPlayerWechatCodeLogin request) {
-        playerService.logon(session, request.getCode());
-    }
-
-    @MessageHandler
-    public void editName(IoSession session, ReqPlayerEditName request) {
-        playerService.editName(session, request.getName());
-    }
 
     @GmHandler(cmd = GmCommands.LEVEL)
 	public void gmSetLevel(long playerId, int level) {

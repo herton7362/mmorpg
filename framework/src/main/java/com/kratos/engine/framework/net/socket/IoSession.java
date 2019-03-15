@@ -9,6 +9,7 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +31,7 @@ public class IoSession {
 
 	private long playerId;
 
-	private Map<String, Object> attributes;
+	private Map<String, Object> attributes = new HashMap<>();
 
     public IoSession(Channel channel) {
         this.channel = channel;

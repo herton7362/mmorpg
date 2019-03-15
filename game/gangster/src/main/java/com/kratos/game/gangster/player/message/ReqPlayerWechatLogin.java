@@ -3,6 +3,6 @@ package com.kratos.game.gangster.player.message;
 import lombok.Data;
 
 @Data
-public class ResPlayerLogin {
-	private boolean create;
+public class ReqPlayerWechatLogin {
+	private String code;
 }

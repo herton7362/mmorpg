@@ -66,7 +66,7 @@ public class AiTest {
         }).start();
 		while (true) {
 			fsm.enterFrame(player);
-            fsm2.enterFrame(player2);
+            //fsm2.enterFrame(player2);
 			Thread.sleep(500);
 		}
 	}

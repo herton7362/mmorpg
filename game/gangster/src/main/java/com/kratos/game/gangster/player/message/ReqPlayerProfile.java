@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-@MessageMeta(module = Modules.PLAYER, cmd = PlayerServiceImpl.CMD_REQ_WECHAT_CODE_LOGIN)
-public class ReqPlayerWechatCodeLogin extends Message {
-	private String code;
+@MessageMeta(module = Modules.PLAYER, cmd = PlayerServiceImpl.CMD_REQ_PROFILE)
+public class ReqPlayerProfile extends Message {
 }

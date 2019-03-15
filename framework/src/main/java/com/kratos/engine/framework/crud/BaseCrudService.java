@@ -30,7 +30,7 @@ public abstract class BaseCrudService<K extends Serializable, V extends BaseEnti
     private AbstractCacheContainer<K, V> container;
     private Class<V> entityClass;
     @Autowired
-    private EntityManager em;
+    protected EntityManager em;
     @Autowired
     private DbService dbService;
 

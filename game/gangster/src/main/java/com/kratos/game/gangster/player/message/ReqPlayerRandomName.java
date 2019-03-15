@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-@MessageMeta(module = Modules.PLAYER, cmd = PlayerServiceImpl.CMD_REQ_EDIT_NAME)
-public class ReqPlayerEditName extends Message {
-	private String name;
+@MessageMeta(module = Modules.PLAYER, cmd = PlayerServiceImpl.CMD_REQ_RANDOM_NAME)
+public class ReqPlayerRandomName extends Message {
 }

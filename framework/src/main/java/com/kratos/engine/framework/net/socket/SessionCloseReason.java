@@ -7,6 +7,9 @@ public enum SessionCloseReason {
 	
 	/** 链接超时 */
 	OVER_TIME,
-	
+
+	/** token 不正确 */
+	INVALID_TOKEN,
+
 
 }

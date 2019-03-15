@@ -44,6 +44,8 @@ public class Player extends LongKeyEntity {
     private short stamina; // 体力
     @Column(length = 30)
     private String wechatOpenid; // 微信openid
+    @Column(length = 500)
+    private String avatarUrl; // 头像
 
     @Override
     public String toString() {
